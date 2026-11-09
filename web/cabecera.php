@@ -13,7 +13,7 @@ if (MODO_TRABAJO=="produccion")
         error_reporting(E_ALL & ~E_DEPRECATED);  
 
 spl_autoload_register(function ($clase){
-    $ruta=RUTABASE."/scripts/clases/";
+    $ruta=RUTABASE."/aplicacion/clases/curso2026";
     $fichero=$ruta."$clase.php";
     
     if (file_exists($fichero))
@@ -26,25 +26,7 @@ spl_autoload_register(function ($clase){
         }
 });
 
-//para autocarga de muchas carpetas:
-// spl_autoload_register(function ($clase){
-//     $carpetas = [
-//         RUTABASE . "/scripts/clases/",
-//         RUTABASE . "/scripts/librerias/"
-//     ];
 
-//     foreach ($carpetas as $ruta) {
-//         $fichero = $ruta . "$clase.php";
-
-//         // Si encontramos el archivo en esta carpeta, lo cargamos y salimos de la función
-//         if (file_exists($fichero)) {
-//             require_once $fichero;
-//             return; // Éxito: detenemos el autoload para esta clase
-//         }
-//     }
-
-//     throw new Exception("La clase '$clase' no se ha encontrado en ninguna de las rutas configuradas.");
-// });
 
 include(RUTABASE."/aplicacion/plantilla/plantilla.php");
 
