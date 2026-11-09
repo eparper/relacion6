@@ -1,0 +1,155 @@
+@charset "UTF8";
+
+body {
+    background-color: #BED4D6;
+    font-size: 16px;
+}
+
+#documento{
+    margin: 0 auto;
+    background-color: #DCE1E8;
+    width: 700px;
+    border-radius: 50px;
+    padding: 2%;
+    /* border: 1px solid #4C5D7D; */
+    box-shadow: 0 0 45px 5px rgba(149, 149, 149, 0.853);
+    margin-top: 50px;
+}
+#cabecera{
+    background-color: #ffffff;
+    padding: 5px;
+}
+#cabecera #logo{
+    width: 75px;
+    height: 50px;
+}
+
+#cabecera #titulo{
+    font-size: 1.3em;
+    font-style: italic;
+    
+    
+}
+
+#barraUbicacion {
+    background-color: #BED4D6;
+    
+}
+
+.boton{
+    background-color: blue;
+    color:white;
+    border:thin black solid;
+}
+
+.boton a{
+    text-decoration: none;
+    color:white;
+}
+
+.boton a:visited{
+    text-decoration: none;
+    color:white;
+}
+
+.boton a:hover{
+    background-color:cyan;
+    color: black;
+}
+
+.boton:hover{
+    background-color:cyan;
+    color: black;
+}
+
+.tabla{
+    width: 100%;
+    border-collapse: collapse;
+    border: none;
+    background-color: white;
+}
+
+.tabla th{
+    background-color: teal;
+    color: blue;
+}
+.tabla tr.par{
+    background-color: black;
+    color: white;
+    
+}
+
+.tabla tr.impar{
+    
+}
+
+#pie{
+    background-color: #81e714;
+    color: blue;
+    font-size: 1.5 em;
+    padding: 5px;
+}
+
+.for_texto{
+    border:blue thin solid;
+    background-color: white;
+    padding: 2px;
+    margin:2px;
+    border-radius: 4px;
+}
+.error{
+    background-color: white;
+    color:red;
+    border:thin solid red;
+    padding:5px;
+}
+
+#barraMenu ul {
+    display: flex;
+    padding-left: 0px;
+    margin: 0px;
+    background-color: #8DB5C6;
+    padding: 2%;
+}
+
+#barraMenu ul li {
+    padding: 1%;
+    list-style: none;
+    
+    
+}
+
+#barraMenu ul li a {
+    text-decoration: none;
+    color: black;
+}
+
+#barraMenu ul li:hover {
+    padding: 1%;
+    list-style: none;
+    background-color: #4C5D7D;
+    
+    
+}
+
+#barraMenu ul li:hover a {
+    color: #DCE1E8;
+}
+
+header, #barraMenu, #barraLogin {
+    background-color: #4C5D7D;
+    color: #DCE1E8;
+    border-top-left-radius: 50px;
+    border-top-right-radius: 50px;
+}
+
+#titulo {
+    margin: 0;
+    text-align: center;
+}
+
+.icono {
+    width: 100px;
+    margin: 10px;
+    border-top-left-radius: 40px;
+}
