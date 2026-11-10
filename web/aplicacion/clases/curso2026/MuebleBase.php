@@ -1,9 +1,11 @@
 <?php
 
+require_once RUTABASE . "/scripts/librerias/validacion.php";
+
 class MuebleBase {
 
     //CONSTANTES
-    public const MAXIMO_MUEBLES = 50;
+    public const MAXIMO_MUEBLES = 5;
 
     //PROPIEDADES
     private string $_nombre;
@@ -21,7 +23,37 @@ class MuebleBase {
                                 int $year = 2020, string $fechaInicio = "01/01/2020",
                                 string $fechaFin = "31/12/2040", float $precio = 30) 
     {
+        //si se ha superado el máximo de muebles creados
+        if (self::$_mueblesCreados > self::MAXIMO_MUEBLES) {
+            throw new Exception("No se permite la creación del mueble");
+        }
+
         
+        if ($this->setNombre($nom) == false) {
+            throw new Error("Error en el nombre");
+        }
+        else {
+            $this->setNombre($nom);
+            $this->_nombre = $nom;
+        }
+            
+
+        $this->setFabricante($fabri);
+        $this->setPais($pais);  
+        $this->setAnio($year);  
+        $this->setFechaIniVenta($fechaInicio);
+        $this->setFechaFinVenta($fechaFin);
+        $this->setPrecio($precio);
+
+        $this->_fabricante = $fabri;
+        $this->_pais = $pais;
+        $this->_anio = $year;
+        $this->_fechaIniVenta = $fechaInicio;
+        $this->_fechaFinVenta = $fechaFin;
+        $this->_precio = $precio;
+
+        self::$_mueblesCreados++;
+
     }
 
     //getters y setters
@@ -54,7 +86,7 @@ class MuebleBase {
     }
 
     //--
-    public function setNombre(string $nuevoNombre) : bool {
+    public function setNombre(string &$nuevoNombre) : bool {
 
         if (!validaCadena($nuevoNombre, 40, "Nombre")) {
             return false;
@@ -68,14 +100,14 @@ class MuebleBase {
         return true;
     }
 
-    public function setFabricante(string $nuevoFabricante) : bool {
+    public function setFabricante(string &$nuevoFabricante) : bool {
 
-        if (!validaCadena($nuevoFabricante, 30, "FaMu:")) {
-            return false;
-        }
+        // if (!validaCadena($nuevoFabricante, 30, "FaMu:")) {
+        //     return false;
+        // }
 
         //si ya empieza por FaMu:
-        if (!substr($nuevoFabricante, 0, 5) == "FaMu:")
+        if (substr($nuevoFabricante, 0, 5) !== "FaMu:")
             $nuevoFabricante = "FaMu:" . $nuevoFabricante;
 
         //recortamos a 30 si se pasa
@@ -86,7 +118,7 @@ class MuebleBase {
         return true;
     }
 
-    public function setPais(string $nuevoPais) : bool {
+    public function setPais(string &$nuevoPais) : bool {
 
         if (!validaCadena($nuevoPais, 20, "ESPAÑA")) {
             return false;
@@ -95,7 +127,7 @@ class MuebleBase {
         return true;
     }
 
-    public function setAnio(int $nuevoAnio) : bool {
+    public function setAnio(int &$nuevoAnio) : bool {
 
         $hoy = time();
         $anioActual = date("Y", $hoy);
@@ -107,7 +139,7 @@ class MuebleBase {
         return true;
     }
 
-    public function setFechaIniVenta(string $nuevaFecha) : bool {
+    public function setFechaIniVenta(string &$nuevaFecha) : bool {
 
         $fechaLimite = new DateTime("01-01-".$this->getAnio());
 
@@ -135,7 +167,7 @@ class MuebleBase {
         }
     }
 
-    public function setFechaFinVenta(string $nuevaFechaFin) : bool {
+    public function setFechaFinVenta(string &$nuevaFechaFin) : bool {
 
         $partesFecha = mb_split("/", $this->getFechaIniVenta());
         $dia = $partesFecha[0];
@@ -168,7 +200,7 @@ class MuebleBase {
         }
     }
 
-    public function setPrecio(float $precio) : bool {
+    public function setPrecio(float &$precio) : bool {
             
         if (!validaReal($precio, 30, 10000, 30)) { //si la nuevaFecha es incorrecta
 
@@ -176,6 +208,22 @@ class MuebleBase {
         }
 
         return true;
+    }
+
+    //public function damePropiedadesAdicionales() : Array;
+
+    public static function puedeCrear(int &$numero) : bool {
+
+        //si todavía se pueden crear muebles:
+        if (self::$_mueblesCreados < self::MAXIMO_MUEBLES) {
+
+            //devolvemos en $numero el número de muebles que aún se pueden crear
+            $numero = self::MAXIMO_MUEBLES - self::$_mueblesCreados;
+            return true;
+        }
+        else
+            return false;
+        
     }
 
     
@@ -200,6 +248,18 @@ class MuebleBase {
     {
         //throw new \Exception('Not implemented');
         ;
+    }
+
+    public function __toString()
+    {
+        return "MUEBLE de clase ". get_class($this) .
+                " con nombre ". $this->getNombre().
+                ", fabricante ". $this->getFabricante() .
+                ", fabricado en ". $this->getPais() .
+                " a partir del año ". $this->getAnio() .
+                ", vendido desde ". $this->getFechaIniVenta() .
+                " hasta ". $this->getFechaFinVenta() .
+                ", precio " . $this->getPrecio();
     }
 
 

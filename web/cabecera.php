@@ -12,21 +12,37 @@ if (MODO_TRABAJO=="produccion")
     else 
         error_reporting(E_ALL & ~E_DEPRECATED);  
 
-spl_autoload_register(function ($clase){
-    $ruta=RUTABASE."/aplicacion/clases/curso2026";
-    $fichero=$ruta."$clase.php";
+// spl_autoload_register(function ($clase){
+//     $ruta=RUTABASE."/aplicacion/clases/curso2026/";
+//     $fichero=$ruta."$clase.php";
     
-    if (file_exists($fichero))
-        {
-            require_once($fichero);
+//     if (file_exists($fichero))
+//         {
+//             require_once($fichero);
+//         }
+//       else
+//         {
+//             throw new Exception("La clase $clase no se ha encontrado.");
+//         }
+// });
+
+spl_autoload_register(function ($clase) {
+    $carpetas = [
+        RUTABASE . "/aplicacion/clases/curso2026/",
+        RUTABASE . "/scripts/librerias/"
+    ];
+
+    // Si la clase tiene namespace, convierte \ en /
+    $nombre = str_replace('\\', '/', $clase);
+
+    foreach ($carpetas as $carpeta) {
+        $fichero = $carpeta . $nombre . ".php";
+        if (file_exists($fichero)) {
+            require_once $fichero;
+            return;
         }
-      else
-        {
-            throw new Exception("La clase $clase no se ha encontrado.");
-        }
+    }
 });
-
-
 
 include(RUTABASE."/aplicacion/plantilla/plantilla.php");
 
