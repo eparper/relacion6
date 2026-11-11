@@ -174,7 +174,7 @@ function validaEmail(string &$var, string $defecto):bool {
  */
 function validaCadena(string &$var, int $longitud, string $defecto):bool {
 
-    if (mb_strlen($var) < $longitud) {
+    if (mb_strlen($var) <= $longitud) {
         $var = (string) $var;
         return true;
     }

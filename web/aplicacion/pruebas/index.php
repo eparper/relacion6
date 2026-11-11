@@ -64,4 +64,37 @@ function cuerpo()
     // MuebleBase::puedeCrear($numero);
     // echo "<br><br>".$numero;
     //$mueble1 = new MuebleBase("Mitzoker");
+
+    //clase MuebleReciclado:
+    // $mueble1 = new MuebleReciclado("Mitzokker");
+    // echo $mueble1."<br>".PHP_EOL;
+    // $mueble1 = new MuebleReciclado("Mitzok", porReciclado: 60);
+    // echo $mueble1."<br>".PHP_EOL;
+    // $mueble1 = new MuebleReciclado("Mitzok", porReciclado: 60);
+    // echo $mueble1."<br>".PHP_EOL;
+    // $mueble1 = new MuebleReciclado("Mitzok", porReciclado: 60);
+    // echo $mueble1."<br>".PHP_EOL;
+    // $mueble1 = new MuebleReciclado("Mitzok", porReciclado: 60);
+    // echo $mueble1."<br>".PHP_EOL;
+    // $mueble1->setPorcentaje(100);
+    // echo $mueble1."<br>".PHP_EOL;
+    // foreach ($mueble1->damePropiedadesAdicionales() as $prop)
+    //     echo $prop."<br>".PHP_EOL;
+
+    //clase MuebleTradicional:
+    $mueble1 = new MuebleTradicional("Mitzokker");
+    echo $mueble1."<br>".PHP_EOL;
+    $mueble1 = new MuebleTradicional("Mitzok", peso: 14);
+    echo $mueble1."<br>".PHP_EOL;
+    $mueble1 = new MuebleTradicional("Mitzok", peso: 250);
+    echo $mueble1."<br>".PHP_EOL;
+    $mueble1 = new MuebleTradicional("Mitzok", serie: "S02");
+    echo $mueble1."<br>".PHP_EOL;
+    $mueble1 = new MuebleTradicional("Mitzok", peso: 50, serie: "S03");
+    echo $mueble1."<br>".PHP_EOL;
+    $mueble1->setPeso(100);
+    echo $mueble1."<br>".PHP_EOL;
+    foreach ($mueble1->damePropiedadesAdicionales() as $prop)
+        echo $prop."<br>".PHP_EOL;
+
 }
