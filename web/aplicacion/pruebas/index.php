@@ -51,7 +51,7 @@ function cuerpo()
 
     // echo "<br><br>".$numero;
 
-    // //$mueble1 -> $antiguedad;
+    // //$mueble1 -> antiguedad = 2;
     // $mueble1 = new MuebleBase("Mitzokerr");
     // echo $mueble1."<br>".PHP_EOL;
     // $mueble1 = new MuebleBase("Mitzooker");
@@ -82,19 +82,62 @@ function cuerpo()
     //     echo $prop."<br>".PHP_EOL;
 
     //clase MuebleTradicional:
-    $mueble1 = new MuebleTradicional("Mitzokker");
-    echo $mueble1."<br>".PHP_EOL;
-    $mueble1 = new MuebleTradicional("Mitzok", peso: 14);
-    echo $mueble1."<br>".PHP_EOL;
-    $mueble1 = new MuebleTradicional("Mitzok", peso: 250);
-    echo $mueble1."<br>".PHP_EOL;
-    $mueble1 = new MuebleTradicional("Mitzok", serie: "S02");
-    echo $mueble1."<br>".PHP_EOL;
-    $mueble1 = new MuebleTradicional("Mitzok", peso: 50, serie: "S03");
-    echo $mueble1."<br>".PHP_EOL;
-    $mueble1->setPeso(100);
-    echo $mueble1."<br>".PHP_EOL;
-    foreach ($mueble1->damePropiedadesAdicionales() as $prop)
-        echo $prop."<br>".PHP_EOL;
+    // $mueble1 = new MuebleTradicional("Mitzokker");
+    // echo $mueble1."<br>".PHP_EOL;
+    // $mueble1 = new MuebleTradicional("Mitzok", peso: 14);
+    // echo $mueble1."<br>".PHP_EOL;
+    // $mueble1 = new MuebleTradicional("Mitzok", peso: 250);
+    // echo $mueble1."<br>".PHP_EOL;
+    // $mueble1 = new MuebleTradicional("Mitzok", serie: "S02");
+    // echo $mueble1."<br>".PHP_EOL;
+    // $mueble1 = new MuebleTradicional("Mitzok", peso: 50, serie: "S03");
+    // echo $mueble1."<br>".PHP_EOL;
+    // $mueble1->antiguedad = "2";
+    // $mueble1->setPeso(100);
+    // echo $mueble1."<br>".PHP_EOL;
+    // foreach ($mueble1->damePropiedadesAdicionales() as $prop)
+    //     echo $prop."<br>".PHP_EOL;
+
+    //clase Caracteristicas:
+    $objetoCarac = new Caracteristicas();
+
+    $objetoCarac->color = "rosa";
+    echo $objetoCarac->color."<br>".PHP_EOL;
+    $objetoCarac->material = "plástico";
+    echo $objetoCarac->material."<br>".PHP_EOL;
+    $objetoCarac->longitud = 38;
+    echo $objetoCarac->longitud."<br>".PHP_EOL;
+    $objetoCarac->ULTIMA = "ultimaProp";
+    echo $objetoCarac->ULTIMA."<br>".PHP_EOL;
+    //esta de saludo no se permite:
+    //$objetoCarac->saludo = "hola";
+    //echo $objetoCarac->saludo."<br>".PHP_EOL;
+
+    //después de poner ULTIMA, se pueden editar las propiedas
+    $objetoCarac->longitud = 50;
+    echo $objetoCarac->longitud."<br>".PHP_EOL;
+
+    // $objetoCarac->saludo = "hola";
+    // echo $objetoCarac->saludo."<br>".PHP_EOL;
+
+    if (isset($objetoCarac->ULTIMA)) {
+        echo "No se permiten más propiedades"."<br>".PHP_EOL;
+    }
+
+    unset($objetoCarac->ULTIMA);
+
+    $objetoCarac->despedida = "adiós";
+    echo $objetoCarac->despedida."<br>".PHP_EOL;
+
+    $cadena = "";
+    foreach ($objetoCarac as $key => $value) {
+
+        $cadena .= $key . ": " . $value . "; <br>".PHP_EOL;
+    }
+
+    echo $cadena;
+
+    echo $objetoCarac;
+
 
 }
