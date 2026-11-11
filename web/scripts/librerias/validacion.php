@@ -43,7 +43,7 @@ function validaEntero(int &$var, int $min, int $max, int $defecto):bool {
  * @param integer $defecto El valor por defecto que se le pone a $var cuando hay algún problema
  * @return boolean devuelve true si todo ha ido bien y false cuando no ha ido bien
  */
-function validaReal(int &$var, int $min, int $max, int $defecto):bool {
+function validaReal(float &$var, float $min, float $max, float $defecto):bool {
 
     $opciones = [
         "options" => [
@@ -55,8 +55,8 @@ function validaReal(int &$var, int $min, int $max, int $defecto):bool {
 
     $resultadoBien = filter_var($var, FILTER_VALIDATE_FLOAT, $opciones);
 
-    if ($resultadoBien) {
-        $var = $resultadoBien;
+    if ($resultadoBien !== false) {
+        //$var = $resultadoBien;
         return true;
     }
     else {

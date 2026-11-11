@@ -2,7 +2,7 @@
 
 require_once RUTABASE . "/scripts/librerias/validacion.php";
 
-class MuebleBase {
+abstract class MuebleBase {
 
     //CONSTANTES
     public const MAXIMO_MUEBLES = 5;
@@ -24,7 +24,7 @@ class MuebleBase {
                                 string $fechaFin = "31/12/2040", float $precio = 30) 
     {
         //si se ha superado el máximo de muebles creados
-        if (self::$_mueblesCreados > self::MAXIMO_MUEBLES) {
+        if (self::$_mueblesCreados >= self::MAXIMO_MUEBLES) {
             throw new Exception("No se permite la creación del mueble");
         }
 
@@ -34,23 +34,16 @@ class MuebleBase {
         }
         else {
             $this->setNombre($nom);
-            $this->_nombre = $nom;
         }
             
 
         $this->setFabricante($fabri);
-        $this->setPais($pais);  
+        $this->setPais($pais); 
         $this->setAnio($year);  
         $this->setFechaIniVenta($fechaInicio);
         $this->setFechaFinVenta($fechaFin);
         $this->setPrecio($precio);
-
-        $this->_fabricante = $fabri;
-        $this->_pais = $pais;
-        $this->_anio = $year;
-        $this->_fechaIniVenta = $fechaInicio;
-        $this->_fechaFinVenta = $fechaFin;
-        $this->_precio = $precio;
+        
 
         self::$_mueblesCreados++;
 
@@ -86,7 +79,7 @@ class MuebleBase {
     }
 
     //--
-    public function setNombre(string &$nuevoNombre) : bool {
+    public function setNombre(string $nuevoNombre) : bool {
 
         if (!validaCadena($nuevoNombre, 40, "Nombre")) {
             return false;
@@ -97,10 +90,11 @@ class MuebleBase {
         }
 
         $nuevoNombre = mb_strtoupper($nuevoNombre);
+        $this->_nombre = $nuevoNombre;
         return true;
     }
 
-    public function setFabricante(string &$nuevoFabricante) : bool {
+    public function setFabricante(string $nuevoFabricante) : bool {
 
         // if (!validaCadena($nuevoFabricante, 30, "FaMu:")) {
         //     return false;
@@ -115,19 +109,21 @@ class MuebleBase {
             $nuevoFabricante = mb_substr($nuevoFabricante, 0, 30);
         }
         
+        $this->_fabricante = $nuevoFabricante;
         return true;
     }
 
-    public function setPais(string &$nuevoPais) : bool {
+    public function setPais(string $nuevoPais) : bool {
 
         if (!validaCadena($nuevoPais, 20, "ESPAÑA")) {
             return false;
         }
         
+        $this->_pais = $nuevoPais;
         return true;
     }
 
-    public function setAnio(int &$nuevoAnio) : bool {
+    public function setAnio(int $nuevoAnio) : bool {
 
         $hoy = time();
         $anioActual = date("Y", $hoy);
@@ -136,16 +132,19 @@ class MuebleBase {
             return false;
         }
         
+        $this->_anio = $nuevoAnio;
         return true;
     }
 
-    public function setFechaIniVenta(string &$nuevaFecha) : bool {
+    public function setFechaIniVenta(string $nuevaFecha) : bool {
 
         $fechaLimite = new DateTime("01-01-".$this->getAnio());
 
         //construimos fecha con año de fabricación (1 de enero)
-        if (!validaFecha($nuevaFecha, "01/01/2020")) { //si la nuevaFecha es incorrecta
+        if (!validaFecha($nuevaFecha, "")) { //si la nuevaFecha es incorrecta
 
+            $nuevaFecha = "01/01/". $this->getAnio();
+            $this->_fechaIniVenta = $nuevaFecha;
             return false;
         }
         else { //si la nuevaFecha es correcta
@@ -158,16 +157,19 @@ class MuebleBase {
             $nuevaFechaDate = new DateTime($dia."-".$mes."-".$anio);
 
             if ($fechaLimite < $nuevaFechaDate) { //si $fechaLimite es menor está bien
+
+                $this->_fechaIniVenta = $nuevaFecha;
                 return true;
             }
             else { //en caso de fallo:
                 $nuevaFecha = "01/01/". $this->getAnio();
+                $this->_fechaIniVenta = $nuevaFecha;
                 return false;
             }
         }
     }
 
-    public function setFechaFinVenta(string &$nuevaFechaFin) : bool {
+    public function setFechaFinVenta(string $nuevaFechaFin) : bool {
 
         $partesFecha = mb_split("/", $this->getFechaIniVenta());
         $dia = $partesFecha[0];
@@ -177,7 +179,7 @@ class MuebleBase {
         $fechaLimite = new DateTime($dia."-".$mes."-".$anio);
 
         //
-        if (!validaFecha($nuevaFechaFin, "31/12/2040")) { //si la nuevaFecha es incorrecta
+        if (!validaFecha($nuevaFechaFin, "")) { //si la nuevaFecha es incorrecta
 
             return false;
         }
@@ -191,6 +193,7 @@ class MuebleBase {
             $nuevaFechaFinDate = new DateTime($diaFin."-".$mesFin."-".$anioFin);
 
             if ($fechaLimite < $nuevaFechaFinDate) { //si $fechaLimite es menor está bien
+                $this->_fechaFinVenta = $nuevaFechaFin;
                 return true;
             }
             else { //en caso de fallo le ponemos fecha por defecto:
@@ -200,17 +203,18 @@ class MuebleBase {
         }
     }
 
-    public function setPrecio(float &$precio) : bool {
+    public function setPrecio(float $precio) : bool {
             
         if (!validaReal($precio, 30, 10000, 30)) { //si la nuevaFecha es incorrecta
 
             return false;
         }
 
+        $this->_precio = $precio;
         return true;
     }
 
-    //public function damePropiedadesAdicionales() : Array;
+    abstract public function damePropiedadesAdicionales() : Array;
 
     public static function puedeCrear(int &$numero) : bool {
 
