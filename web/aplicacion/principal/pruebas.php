@@ -137,7 +137,19 @@ function cuerpo()
 
     echo $cadena;
 
-    echo $objetoCarac;
+    echo $objetoCarac. "; <br>".PHP_EOL;
+
+    //método anadirCaracteristicas:
+    $mueble1 = new MuebleTradicional("Mitzok", peso: 50, serie: "S03");
+    echo $mueble1."<br>".PHP_EOL;
+
+    $mueble1->anadirCaracteristicas("saliente", true, "precio", 300);
+
+    echo $mueble1;
+
+    //probar luego y también probar si no le paso un string a anadirCaracteristicas
+
+
 
 
 }

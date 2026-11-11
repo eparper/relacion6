@@ -7,6 +7,9 @@ abstract class MuebleBase {
     //CONSTANTES
     public const MAXIMO_MUEBLES = 5;
 
+    //
+    private Caracteristicas $_propCaract;
+
     //PROPIEDADES
     private string $_nombre;
     private string $_fabricante = "";
@@ -44,8 +47,41 @@ abstract class MuebleBase {
         $this->setFechaFinVenta($fechaFin);
         $this->setPrecio($precio);
         
+        $this->_propCaract = new Caracteristicas();
 
         self::$_mueblesCreados++;
+
+    }
+
+    //método 
+    public function anadirCaracteristicas(string $carac, mixed $valor, mixed ...$params) {
+
+        //añadimos el primer par:
+        $this->_propCaract->$carac = $valor;
+
+        if (count($params) % 2 !== 0) { //si es impar se desecha el último:
+            array_pop($params);
+        }
+        else { //si es par
+            for ($cont = 0; $cont < count($params); $cont++) {
+
+                //las posiciones con indice par (la primera es par porque es 0, entonces las vamos a poner como key)
+                if ($cont % 2 == 0) {
+                    $aux1 = $params[$cont];
+                    $aux2 = $params[$cont+1];
+                    
+                    $this->_propCaract->$aux1 = $aux2; //se le suma 1 al cont para coger la siguiente posicion (el valor)
+                    //$this->_propCaract->{$params[$cont]} = $params[$cont + 1]; //es que 
+                }
+                
+            }
+        }
+    }
+
+    public function getCaracteristicas() : Caracteristicas {
+
+        return $this->_propCaract;
+
 
     }
 
@@ -256,14 +292,18 @@ abstract class MuebleBase {
 
     public function __toString()
     {
-        return "MUEBLE de clase ". get_class($this) .
+
+        $cadena = "MUEBLE de clase ". get_class($this) .
                 " con nombre ". $this->getNombre().
                 ", fabricante ". $this->getFabricante() .
                 ", fabricado en ". $this->getPais() .
                 " a partir del año ". $this->getAnio() .
                 ", vendido desde ". $this->getFechaIniVenta() .
                 " hasta ". $this->getFechaFinVenta() .
-                ", precio " . $this->getPrecio();
+                ", precio " . $this->getPrecio() .
+                ", CARACTERÍSTICAS: " . $this->getCaracteristicas();
+
+        return $cadena;
     }
 
 
