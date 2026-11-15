@@ -5,7 +5,7 @@ require_once RUTABASE . "/scripts/librerias/validacion.php";
 abstract class MuebleBase {
 
     //CONSTANTES
-    public const MAXIMO_MUEBLES = 5;
+    public const MAXIMO_MUEBLES = 20;
 
     //
     private Caracteristicas $_propCaract;

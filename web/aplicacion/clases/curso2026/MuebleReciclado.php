@@ -11,15 +11,15 @@ final class MuebleReciclado extends MuebleBase {
     {
         parent::__construct($nom, $fabri, $pais, $year, $fechaInicio, $fechaFin, $precio);
 
-        $this->setPorcentaje($porReciclado);
+        $this->setPorcentajeReciclado($porReciclado);
 
     }
 
-    public function getPorcentaje() : int {
+    public function getPorcentajeReciclado() : int {
         return $this->_porcentajeReciclado;
     }
 
-    public function setPorcentaje(int $porc) : bool {
+    public function setPorcentajeReciclado(int $porc) : bool {
 
         if (!validaEntero($porc, 0, 100, 10)) {
             return false;
@@ -34,7 +34,7 @@ final class MuebleReciclado extends MuebleBase {
 
         $arr = [];
 
-        $arr[] = "porcentajeReciclado";
+        $arr[] = "PorcentajeReciclado";
 
         return $arr;
 
@@ -43,6 +43,6 @@ final class MuebleReciclado extends MuebleBase {
     
     public function __toString()
     {
-        return parent::__toString() . ". Porcentaje reciclado: " . $this->getPorcentaje();
+        return parent::__toString() . ". Porcentaje reciclado: " . $this->getPorcentajeReciclado();
     }
 }

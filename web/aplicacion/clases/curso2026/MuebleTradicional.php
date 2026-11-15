@@ -49,8 +49,8 @@ final class MuebleTradicional extends MuebleBase {
 
         $arr = [];
 
-        $arr[] = "peso";
-        $arr[] = "serie";
+        $arr[] = "Peso";
+        $arr[] = "Serie";
 
         return $arr;
 
