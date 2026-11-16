@@ -190,9 +190,16 @@ abstract class MuebleBase {
             $mes = $partesFecha[1];
             $anio = $partesFecha[2]; 
 
-            $nuevaFechaDate = new DateTime($dia."-".$mes."-".$anio);
+            if (mb_strlen($anio) !== 4) {
+                $nuevaFecha = "01/01/". $this->getAnio();
+                $this->_fechaIniVenta = $nuevaFecha;
+                return false;
+            }
+            else {
+                $nuevaFechaDate = new DateTime($dia."-".$mes."-".$anio);
+            }
 
-            if ($fechaLimite < $nuevaFechaDate) { //si $fechaLimite es menor está bien
+            if ($fechaLimite <= $nuevaFechaDate) { //si $fechaLimite es menor o igual está bien
 
                 $this->_fechaIniVenta = $nuevaFecha;
                 return true;
@@ -226,7 +233,15 @@ abstract class MuebleBase {
             $mesFin = $partesFechaFin[1];
             $anioFin = $partesFechaFin[2]; 
 
-            $nuevaFechaFinDate = new DateTime($diaFin."-".$mesFin."-".$anioFin);
+            if (mb_strlen($anioFin) !== 4) { //si no tiene 4 cifras, está mal
+                
+                return false;
+            }
+            else {
+                $nuevaFechaFinDate = new DateTime($diaFin."-".$mesFin."-".$anioFin);
+            }
+
+            
 
             if ($fechaLimite < $nuevaFechaFinDate) { //si $fechaLimite es menor está bien
                 $this->_fechaFinVenta = $nuevaFechaFin;

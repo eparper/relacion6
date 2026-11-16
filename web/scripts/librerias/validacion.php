@@ -74,12 +74,18 @@ function validaReal(float &$var, float $min, float $max, float $defecto):bool {
  */
 function validaFecha(string &$var, string $defecto):bool  {
 
-    
-    //separamos el día, mes y año
-    $fecha = mb_split("/", $var); 
+    if (!preg_match("/^[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}$/", $var)) {
+        $var = $defecto;
+        return false;
+    }
+    else {
+        //separamos el día, mes y año
+        $fecha = mb_split("/", $var); 
 
-    //mes -- día -- año
-    $fechaBien = checkdate((int)$fecha[1], (int)$fecha[0], (int)$fecha[2]);
+        //mes -- día -- año
+        $fechaBien = checkdate((int)$fecha[1], (int)$fecha[0], (int)$fecha[2]);
+    }
+    
 
     if ($fechaBien) {
 
@@ -111,19 +117,29 @@ function validaHora(string &$var, string $defecto):bool {
     
         $horaBien = true;
 
-        //separamos en hora, minutos y segundos
-        $hora = mb_split(":", $var); 
+        $patronABuscar = "/^[0-9]{1,2}:[0-9]{1,2}:[0-9]{1,2}$/";
 
-        //hora, minutos y segundos
-        if ((int)$hora[0] > 23) { //horas
-            $horaBien = false;
+        if (!preg_match($patronABuscar, $var)) {
+            $var = $defecto;
+            return false;
         }
-        if ((int)$hora[1] > 59) { //minutos
-            $horaBien = false;
+        else {
+            //separamos en hora, minutos y segundos
+            $hora = mb_split(":", $var); 
+
+            //hora, minutos y segundos
+            if ((int)$hora[0] > 23) { //horas
+                $horaBien = false;
+            }
+            if ((int)$hora[1] > 59) { //minutos
+                $horaBien = false;
+            }
+            if ((int)$hora[2] > 59) { //segundos
+                $horaBien = false;
+            }
         }
-        if ((int)$hora[2] > 59) { //segundos
-            $horaBien = false;
-        }
+
+        
 
         if ($horaBien) {
 

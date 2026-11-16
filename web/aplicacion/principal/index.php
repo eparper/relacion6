@@ -62,6 +62,8 @@ if (isset($_POST["modificar"])) {
     header("Location: modificar.php?indice=$indice");
 }
 
+
+
 //dibuja la plantilla de la vista
 inicioCabecera("TIENDA");
 cabecera();
