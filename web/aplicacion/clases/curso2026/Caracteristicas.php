@@ -22,6 +22,28 @@ class Caracteristicas implements Iterator {
      */
     public function __get(string $nombre)
     {
+        $arrayLetrasNums = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", 
+                            "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", 
+                            "x", "y", "z", "A", "B", "C", "D", "E", "F", "G", "H", "I", 
+                            "J", "K", "L", 
+                        "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", 
+                        "X", "Y", "Z", 0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+        $cadAleatoria = "";
+
+        for ($cont = 0; $cont < 15; $cont++) {
+
+            //le restamos 1 porque intenta acceder a la posición 64 y solo hay del 0 al 63
+            $numRandom = mt_rand(0, count($arrayLetrasNums) - 1);
+
+            $cadAleatoria = $arrayLetrasNums[$numRandom];
+        }
+
+        if ($nombre == "numero_serie") {
+            $this->_caracts["numero_serie"] = $cadAleatoria;
+            return $this->_caracts["numero_serie"];
+        }
+
         if (isset($this->_caracts[$nombre]))
             return $this->_caracts[$nombre];
         else
@@ -39,6 +61,10 @@ class Caracteristicas implements Iterator {
     public function __set(string $nombre, mixed $valor)
     {
         
+        // if (isset($this->_caracts["numero_serie"])) {
+
+        // }
+
         if (validaRango("ULTIMA", $this->_caracts, 2)) {
 
             //si ULTIMA está en el array y si se quiere modificar una propiedad existente 

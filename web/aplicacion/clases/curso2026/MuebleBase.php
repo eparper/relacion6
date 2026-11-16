@@ -19,12 +19,15 @@ abstract class MuebleBase {
     private string $_fechaFinVenta = "31/12/2040";
     private float $_precio = 30;
 
+    //PROP ENUM
+    private Materiales $_material = Materiales::HIERRO;
+
     //VARIABLE DE CLASE
     private static int $_mueblesCreados = 0;
 
     public function __construct(string $nom, string $fabri = "", string $pais = "ESPAÑA",
                                 int $year = 2020, string $fechaInicio = "01/01/2020",
-                                string $fechaFin = "31/12/2040", float $precio = 30) 
+                                string $fechaFin = "31/12/2040", float $precio = 30, int $material = 10) 
     {
         //si se ha superado el máximo de muebles creados
         if (self::$_mueblesCreados >= self::MAXIMO_MUEBLES) {
@@ -46,6 +49,7 @@ abstract class MuebleBase {
         $this->setFechaIniVenta($fechaInicio);
         $this->setFechaFinVenta($fechaFin);
         $this->setPrecio($precio);
+        $this->setMaterial($material);
         
         $this->_propCaract = new Caracteristicas();
 
@@ -86,6 +90,14 @@ abstract class MuebleBase {
     }
 
     //getters y setters
+    public function getMaterial() : int {
+        return $this -> _material->valor();
+    }
+
+    public function getMaterialDescripcion() : string {
+        return $this -> _material->descripcion();
+    }
+
     public function getNombre() : string {
         return $this -> _nombre;
     }
@@ -115,6 +127,36 @@ abstract class MuebleBase {
     }
 
     //--
+    public function setMaterial(int $nuevoMaterial) : bool {
+
+        $array = Materiales::casos();
+        //$valor = $this->_material->valor();
+        
+
+        foreach ($array as $clave => $value) {
+
+            if ($nuevoMaterial == $value->valor()) { //si las descripciones coinciden es que el material está
+                $material = $array[$clave];
+                
+                $this->_material = $material;
+                return true;
+            }
+            
+            
+        }
+
+        return false;
+
+        // if (validaRango(false, $array, 1)) { //si no hay errores
+        //     $array = Materiales::casos()[$nuevoMaterial];
+
+        //     $this->_material = $array;
+        //     return true;
+        // }
+
+        
+    }
+
     public function setNombre(string $nuevoNombre) : bool {
 
         if (!validaCadena($nuevoNombre, 40, "Nombre")) {
@@ -316,7 +358,8 @@ abstract class MuebleBase {
                 ", vendido desde ". $this->getFechaIniVenta() .
                 " hasta ". $this->getFechaFinVenta() .
                 ", precio " . $this->getPrecio() .
-                ", CARACTERÍSTICAS: " . $this->getCaracteristicas();
+                ", CARACTERÍSTICAS: " . $this->getCaracteristicas() .
+                " de material " . $this->getMaterialDescripcion();
 
         return $cadena;
     }
