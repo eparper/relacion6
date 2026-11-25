@@ -1,5 +1,8 @@
 <?php
 include_once(dirname(__FILE__) . "/cabecera.php");
+
+header("Location: /aplicacion/principal/index.php");
+exit();
 //controlador
 
 $barraUbicacion = [
@@ -31,6 +34,6 @@ function cuerpo()
 {
 ?>
     <br><br>
-    <a href="./aplicacion/pruebas/index.php">Acceso a Pruebas</a>
+    
 <?php
 }

@@ -1,0 +1,368 @@
+<?php
+
+require_once RUTABASE . "/scripts/librerias/validacion.php";
+
+abstract class MuebleBase {
+
+    //CONSTANTES
+    public const MAXIMO_MUEBLES = 20;
+
+    //
+    private Caracteristicas $_propCaract;
+
+    //PROPIEDADES
+    private string $_nombre;
+    private string $_fabricante = "";
+    private string $_pais = "ESPAÑA";
+    private int $_anio = 2020;
+    private string $_fechaIniVenta = "01/01/2020";
+    private string $_fechaFinVenta = "31/12/2040";
+    private float $_precio = 30;
+
+    //PROP ENUM
+    private Materiales $_material = Materiales::HIERRO;
+
+    //VARIABLE DE CLASE
+    private static int $_mueblesCreados = 0;
+
+    public function __construct(string $nom, string $fabri = "", string $pais = "ESPAÑA",
+                                int $year = 2020, string $fechaInicio = "01/01/2020",
+                                string $fechaFin = "31/12/2040", float $precio = 30, int $material = 10) 
+    {
+        //si se ha superado el máximo de muebles creados
+        if (self::$_mueblesCreados >= self::MAXIMO_MUEBLES) {
+            throw new Exception("No se permite la creación del mueble");
+        }
+
+        
+        if ($this->setNombre($nom) == false) {
+            throw new Error("Error en el nombre");
+        }
+        else {
+            $this->setNombre($nom);
+        }
+            
+
+        $this->setFabricante($fabri);
+        $this->setPais($pais); 
+        $this->setAnio($year);  
+        $this->setFechaIniVenta($fechaInicio);
+        $this->setFechaFinVenta($fechaFin);
+        $this->setPrecio($precio);
+        $this->setMaterial($material);
+        
+        $this->_propCaract = new Caracteristicas();
+
+        self::$_mueblesCreados++;
+
+    }
+
+    //método 
+    public function anadirCaracteristicas(string $carac, mixed $valor, mixed ...$params) {
+
+        //añadimos el primer par:
+        $this->_propCaract->$carac = $valor;
+
+        if (count($params) % 2 !== 0) { //si es impar se desecha el último:
+            array_pop($params);
+        }
+        else { //si es par
+            for ($cont = 0; $cont < count($params); $cont++) {
+
+                //las posiciones con indice par (la primera es par porque es 0, entonces las vamos a poner como key)
+                if ($cont % 2 == 0) {
+                    $aux1 = $params[$cont];
+                    $aux2 = $params[$cont+1];
+                    
+                    $this->_propCaract->$aux1 = $aux2; //se le suma 1 al cont para coger la siguiente posicion (el valor)
+                    //$this->_propCaract->{$params[$cont]} = $params[$cont + 1]; //es que 
+                }
+                
+            }
+        }
+    }
+
+    public function getCaracteristicas() : Caracteristicas {
+
+        return $this->_propCaract;
+
+
+    }
+
+    //getters y setters
+    public function getMaterial() : int {
+        return $this -> _material->valor();
+    }
+
+    public function getMaterialDescripcion() : string {
+        return $this -> _material->descripcion();
+    }
+
+    public function getNombre() : string {
+        return $this -> _nombre;
+    }
+
+    public function getFabricante() : string {
+        return $this -> _fabricante;
+    }
+
+    public function getPais() : string {
+        return $this -> _pais;
+    }
+
+    public function getAnio() : int {
+        return $this -> _anio;
+    }
+
+    public function getFechaIniVenta() : string {
+        return $this -> _fechaIniVenta;
+    }
+
+    public function getFechaFinVenta() : string {
+        return $this -> _fechaFinVenta;
+    }
+
+    public function getPrecio() : float {
+        return $this -> _precio;
+    }
+
+    //--
+    public function setMaterial(int $nuevoMaterial) : bool {
+
+        $array = Materiales::casos();
+        //$valor = $this->_material->valor();
+        
+
+        foreach ($array as $clave => $value) {
+
+            if ($nuevoMaterial == $value->valor()) { //si las descripciones coinciden es que el material está
+                $material = $array[$clave];
+                
+                $this->_material = $material;
+                return true;
+            }
+            
+            
+        }
+
+        return false;
+
+        // if (validaRango(false, $array, 1)) { //si no hay errores
+        //     $array = Materiales::casos()[$nuevoMaterial];
+
+        //     $this->_material = $array;
+        //     return true;
+        // }
+
+        
+    }
+
+    public function setNombre(string $nuevoNombre) : bool {
+
+        if (!validaCadena($nuevoNombre, 40, "Nombre")) {
+            return false;
+        }
+
+        if ($nuevoNombre == "") {
+            return false;
+        }
+
+        $nuevoNombre = mb_strtoupper($nuevoNombre);
+        $this->_nombre = $nuevoNombre;
+        return true;
+    }
+
+    public function setFabricante(string $nuevoFabricante) : bool {
+
+        // if (!validaCadena($nuevoFabricante, 30, "FaMu:")) {
+        //     return false;
+        // }
+
+        //si ya empieza por FaMu:
+        if (substr($nuevoFabricante, 0, 5) !== "FaMu:")
+            $nuevoFabricante = "FaMu:" . $nuevoFabricante;
+
+        //recortamos a 30 si se pasa
+        if (mb_strlen($nuevoFabricante) > 30) {
+            $nuevoFabricante = mb_substr($nuevoFabricante, 0, 30);
+        }
+        
+        $this->_fabricante = $nuevoFabricante;
+        return true;
+    }
+
+    public function setPais(string $nuevoPais) : bool {
+
+        if (!validaCadena($nuevoPais, 20, "ESPAÑA")) {
+            return false;
+        }
+        
+        $this->_pais = $nuevoPais;
+        return true;
+    }
+
+    public function setAnio(int $nuevoAnio) : bool {
+
+        $hoy = time();
+        $anioActual = date("Y", $hoy);
+
+        if (!validaEntero($nuevoAnio, 2020, $anioActual, 2020)) {
+            return false;
+        }
+        
+        $this->_anio = $nuevoAnio;
+        return true;
+    }
+
+    public function setFechaIniVenta(string $nuevaFecha) : bool {
+
+        $fechaLimite = new DateTime("01-01-".$this->getAnio());
+
+        //construimos fecha con año de fabricación (1 de enero)
+        if (!validaFecha($nuevaFecha, "")) { //si la nuevaFecha es incorrecta
+
+            $nuevaFecha = "01/01/". $this->getAnio();
+            $this->_fechaIniVenta = $nuevaFecha;
+            return false;
+        }
+        else { //si la nuevaFecha es correcta
+            
+            $partesFecha = mb_split("/", $nuevaFecha);
+            $dia = $partesFecha[0];
+            $mes = $partesFecha[1];
+            $anio = $partesFecha[2]; 
+
+            if (mb_strlen($anio) !== 4) {
+                $nuevaFecha = "01/01/". $this->getAnio();
+                $this->_fechaIniVenta = $nuevaFecha;
+                return false;
+            }
+            else {
+                $nuevaFechaDate = new DateTime($dia."-".$mes."-".$anio);
+            }
+
+            if ($fechaLimite <= $nuevaFechaDate) { //si $fechaLimite es menor o igual está bien
+
+                $this->_fechaIniVenta = $nuevaFecha;
+                return true;
+            }
+            else { //en caso de fallo:
+                $nuevaFecha = "01/01/". $this->getAnio();
+                $this->_fechaIniVenta = $nuevaFecha;
+                return false;
+            }
+        }
+    }
+
+    public function setFechaFinVenta(string $nuevaFechaFin) : bool {
+
+        $partesFecha = mb_split("/", $this->getFechaIniVenta());
+        $dia = $partesFecha[0];
+        $mes = $partesFecha[1];
+        $anio = $partesFecha[2]; 
+
+        $fechaLimite = new DateTime($dia."-".$mes."-".$anio);
+
+        //
+        if (!validaFecha($nuevaFechaFin, "")) { //si la nuevaFecha es incorrecta
+
+            return false;
+        }
+        else { //si la nuevaFecha es correcta
+            
+            $partesFechaFin = mb_split("/", $nuevaFechaFin);
+            $diaFin = $partesFechaFin[0];
+            $mesFin = $partesFechaFin[1];
+            $anioFin = $partesFechaFin[2]; 
+
+            if (mb_strlen($anioFin) !== 4) { //si no tiene 4 cifras, está mal
+                
+                return false;
+            }
+            else {
+                $nuevaFechaFinDate = new DateTime($diaFin."-".$mesFin."-".$anioFin);
+            }
+
+            
+
+            if ($fechaLimite < $nuevaFechaFinDate) { //si $fechaLimite es menor está bien
+                $this->_fechaFinVenta = $nuevaFechaFin;
+                return true;
+            }
+            else { //en caso de fallo le ponemos fecha por defecto:
+                
+                return false;
+            }
+        }
+    }
+
+    public function setPrecio(float $precio) : bool {
+            
+        if (!validaReal($precio, 30, 10000, 30)) { //si la nuevaFecha es incorrecta
+
+            return false;
+        }
+
+        $this->_precio = $precio;
+        return true;
+    }
+
+    abstract public function damePropiedadesAdicionales() : Array;
+
+    public static function puedeCrear(int &$numero) : bool {
+
+        //si todavía se pueden crear muebles:
+        if (self::$_mueblesCreados < self::MAXIMO_MUEBLES) {
+
+            //devolvemos en $numero el número de muebles que aún se pueden crear
+            $numero = self::MAXIMO_MUEBLES - self::$_mueblesCreados;
+            return true;
+        }
+        else
+            return false;
+        
+    }
+
+    
+    //PARA QUE NO TENGA SOBRECARGA DINÁMICA DE PROPIEDADES:
+    //métodos mágicos para control de la sobrecarga
+    public function __set(string $name, mixed $value):void {
+        throw new \Exception("La propiedad $name no existe");
+        
+    }
+
+    public function __get(string $name):mixed {
+        throw new \Exception("La propiedad $name no existe");
+    }
+
+    public function __isset(string $name):bool
+    {
+        //throw new \Exception('Not implemented');
+        return false;
+    }
+
+    public function __unset(string $name):void
+    {
+        //throw new \Exception('Not implemented');
+        ;
+    }
+
+    public function __toString()
+    {
+
+        $cadena = "MUEBLE de clase ". get_class($this) .
+                " con nombre ". $this->getNombre().
+                ", fabricante ". $this->getFabricante() .
+                ", fabricado en ". $this->getPais() .
+                " a partir del año ". $this->getAnio() .
+                ", vendido desde ". $this->getFechaIniVenta() .
+                " hasta ". $this->getFechaFinVenta() .
+                ", precio " . $this->getPrecio() .
+                ", CARACTERÍSTICAS: " . $this->getCaracteristicas() .
+                " de material " . $this->getMaterialDescripcion();
+
+        return $cadena;
+    }
+
+
+}

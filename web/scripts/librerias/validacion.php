@@ -22,8 +22,8 @@ function validaEntero(int &$var, int $min, int $max, int $defecto):bool {
 
     $resultadoBien = filter_var($var, FILTER_VALIDATE_INT, $opciones);
 
-    if ($resultadoBien) {
-        $var = $resultadoBien;
+    if ($resultadoBien !== false) { //le pongo false porque resultadoBien puede dar 0 y 0 es false en PHP
+        //$var = $resultadoBien;
         return true;
     }
     else {
@@ -43,7 +43,7 @@ function validaEntero(int &$var, int $min, int $max, int $defecto):bool {
  * @param integer $defecto El valor por defecto que se le pone a $var cuando hay algún problema
  * @return boolean devuelve true si todo ha ido bien y false cuando no ha ido bien
  */
-function validaReal(int &$var, int $min, int $max, int $defecto):bool {
+function validaReal(float &$var, float $min, float $max, float $defecto):bool {
 
     $opciones = [
         "options" => [
@@ -55,8 +55,8 @@ function validaReal(int &$var, int $min, int $max, int $defecto):bool {
 
     $resultadoBien = filter_var($var, FILTER_VALIDATE_FLOAT, $opciones);
 
-    if ($resultadoBien) {
-        $var = $resultadoBien;
+    if ($resultadoBien !== false) {
+        //$var = $resultadoBien;
         return true;
     }
     else {
@@ -74,29 +74,34 @@ function validaReal(int &$var, int $min, int $max, int $defecto):bool {
  */
 function validaFecha(string &$var, string $defecto):bool  {
 
-    //separamos el día, mes y año
-    $fecha = mb_split("/", $var); 
+    if (!preg_match("/^[0-9]{1,2}\/[0-9]{1,2}\/[0-9]{4}$/", $var)) {
+        $var = $defecto;
+        return false;
+    }
+    else {
+        //separamos el día, mes y año
+        $fecha = mb_split("/", $var); 
 
-    //mes -- día -- año
-    $fechaBien = checkdate($fecha[1], $fecha[0], $fecha[2]);
+        //mes -- día -- año
+        $fechaBien = checkdate((int)$fecha[1], (int)$fecha[0], (int)$fecha[2]);
+    }
+    
 
     if ($fechaBien) {
 
         //construimos una fecha
-        $fechaDate = mktime(0, month: $fecha[1], day: $fecha[0], year: $fecha[2]);
+        $fechaDate = mktime(0, month: (int)$fecha[1], day: (int)$fecha[0], year: (int)$fecha[2]);
 
         //saneamos día y mes si tienen 1 cifra
         $var = date("d/m/Y", $fechaDate); //devuelve string
 
         return true;
-
     }
     else {
 
         $var = $defecto;
         return false;
     }
-
 
 }
 
@@ -109,38 +114,49 @@ function validaFecha(string &$var, string $defecto):bool  {
  */
 function validaHora(string &$var, string $defecto):bool {
 
-    $horaBien = true;
+    
+        $horaBien = true;
 
-    //separamos en hora, minutos y segundos
-    $hora = mb_split(":", $var); 
+        $patronABuscar = "/^[0-9]{1,2}:[0-9]{1,2}:[0-9]{1,2}$/";
 
-    //hora, minutos y segundos
-    if ($hora[0] > 23) { //horas
-        $horaBien = false;
-    }
-    if ($hora[1] > 59) { //minutos
-        $horaBien = false;
-    }
-    if ($hora[2] > 59) { //segundos
-        $horaBien = false;
-    }
+        if (!preg_match($patronABuscar, $var)) {
+            $var = $defecto;
+            return false;
+        }
+        else {
+            //separamos en hora, minutos y segundos
+            $hora = mb_split(":", $var); 
 
-    if ($horaBien) {
+            //hora, minutos y segundos
+            if ((int)$hora[0] > 23) { //horas
+                $horaBien = false;
+            }
+            if ((int)$hora[1] > 59) { //minutos
+                $horaBien = false;
+            }
+            if ((int)$hora[2] > 59) { //segundos
+                $horaBien = false;
+            }
+        }
 
-        //construimos una hora
-        $horaDate = mktime($hora[0], $hora[1], $hora[2]);
+        
 
-        //saneamos la hora
-        $var = date("H:i:s", $horaDate); //devuelve string
+        if ($horaBien) {
 
-        return true;
+            //construimos una hora
+            $horaDate = mktime((int)$hora[0], (int)$hora[1], (int)$hora[2]);
 
-    }
-    else {
+            //saneamos la hora
+            $var = date("H:i:s", $horaDate); //devuelve string
 
-        $var = $defecto;
-        return false;
-    }
+            return true;
+
+        }
+        else {
+            $var = $defecto;
+            return false;
+        }
+    
 }
 
 /**
@@ -174,7 +190,7 @@ function validaEmail(string &$var, string $defecto):bool {
  */
 function validaCadena(string &$var, int $longitud, string $defecto):bool {
 
-    if (mb_strlen($var) < $longitud) {
+    if (mb_strlen($var) <= $longitud) {
         $var = (string) $var;
         return true;
     }
